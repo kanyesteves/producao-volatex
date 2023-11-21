@@ -6,7 +6,7 @@ conn = sqlite3.connect("db/db_producao.db")
 
 st.set_page_config(
     layout="wide",
-    page_title="Produção-Volatex"
+    page_title="SysProduct-Volatex"
 )
 
 # Sidebar
