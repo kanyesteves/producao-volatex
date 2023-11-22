@@ -31,7 +31,6 @@ def save_tear(name_tear, model_tear):
     name_tear = ""
     model_tear = ""
 
-
 def get_tear():
     c.execute(
         "SELECT name, model, created_at FROM teares"
@@ -48,12 +47,10 @@ if register == "Tear":
         save_tear(name_tear, model_tear)
         get_tear()
 
-
 if register == "Operador":
     name_operator  = col1.text_input("Nome")
     office_operator = col2.text_input("Cargo")
     save = st.button("Salvar")
-
 
 if register == "Fornecedor/Produto":
     name_product_supplier  = col1.text_input("Nome")
