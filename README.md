@@ -9,3 +9,9 @@ Este documento tem como objetivo descrever o que será usado de tecnologias e co
 - Streamlit
 - Plotly
 - Sqlite 3
+- Datetime
+
+### Indicadores
+- Tear
+- Operador/Tecelão
+- Fornecedor/Produto

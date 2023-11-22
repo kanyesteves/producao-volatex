@@ -5,9 +5,6 @@ c = conn.cursor()
 
 # Querys
 c.execute(
-    "DROP TABLE teares"
-)
-c.execute(
     "CREATE TABLE IF NOT EXISTS teares ([id] INTEGER PRIMARY KEY, [name] VARCHAR NOT NULL, [model] VARCHAR NOT NULL, [created_at] DATETIME)"
 )
 c.execute(
