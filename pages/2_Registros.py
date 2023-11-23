@@ -73,4 +73,3 @@ if insert:
     save(num_peca, peso, tear, operator, product_supplier, check)
     df_production = get_production()
     num_peca = ""
-    df_production

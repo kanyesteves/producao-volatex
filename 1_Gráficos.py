@@ -1,6 +1,7 @@
 import pandas as pd
 import streamlit as st
 import sqlite3
+import plotly.express as px
 
 
 st.set_page_config(
@@ -49,8 +50,23 @@ if type_filter == "Teares":
     df_tear = get_tear()
     tear = st.selectbox("Tear", df_tear["name"].unique())
     df_filtered = df_production[df_production["tear"] == tear]
-    st.markdown(f"## Total registrado: {df_filtered['peso'].sum():.2f} Kg")
-    st.markdown(f"## Média: {df_filtered['peso'].mean():.2f} Kg")
+    col1, col2 = st.columns(2)
+    col1.markdown(f"### Total registrado: {df_filtered['peso'].sum():.2f} Kg")
+    col2.markdown(f"### Média: {df_filtered['peso'].mean():.2f} Kg")
+
+    col3, col4 = st.columns(2)
+    df_filtered["data"] = pd.to_datetime(df_filtered["data"])
+    df_filtered["mes"]  = df_filtered["data"].apply(lambda x:str(x.month))
+    month = st.selectbox("Mês", df_filtered["mes"].unique())
+    df_filtered_month = df_filtered[df_filtered["mes"] == month]
+    df_filtered_month
+
+    df_filtered_month["dia"]  = df_filtered_month["data"].apply(lambda x:str(x.day))
+    day = st.selectbox("Dia", df_filtered_month["dia"].unique())
+    df_filtered_month_day = df_filtered_month[df_filtered_month["dia"] == day]
+    df_filtered_month_day
+
+    df_filtered["hora"] = df_filtered["data"].apply(lambda x:str(x.hour))
     
 
 if type_filter == "Operadores":
