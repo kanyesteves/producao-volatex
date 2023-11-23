@@ -4,15 +4,9 @@ conn = sqlite3.connect("db/db_producao.db")
 c = conn.cursor()
 
 # Querys
+# c.execute(
+#     "DROP TABLE production"
+# )
 c.execute(
-    "CREATE TABLE IF NOT EXISTS teares ([id] INTEGER PRIMARY KEY, [name] VARCHAR NOT NULL, [model] VARCHAR NOT NULL, [created_at] DATETIME)"
-)
-c.execute(
-    "CREATE TABLE IF NOT EXISTS operators ([id] INTEGER PRIMARY KEY, [name] VARCHAR NOT NULL, [office] VARCHAR NOT NULL, [created_at] DATETIME)"
-)
-c.execute(
-    "CREATE TABLE IF NOT EXISTS products_suppliers ([id] INTEGER PRIMARY KEY, [supplier] VARCHAR NOT NULL, [produto] VARCHAR NOT NULL, [created_at] DATETIME)"
-)
-c.execute(
-    "CREATE TABLE IF NOT EXISTS production ([id] INTEGER PRIMARY KEY, [peso] FLOAT NOT NULL, [operador] VARCHAR NOT NULL, [cliente/produto] VARCHAR NOT NULL, [revisao] VARCHAR, [date] DATETIME)"
+    "CREATE TABLE production ([id] INTEGER PRIMARY KEY, [num_peca] INTEGER NOT NULL, [tear] VARCHAR NOT NULL, [peso] FLOAT NOT NULL, [product_supplier] VARCHAR NOT NULL, [check_production] VARCHAR NOT NULL, [operator] VARCHAR NOT NULL, [data] DATETIME)"
 )

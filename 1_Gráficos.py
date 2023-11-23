@@ -1,7 +1,7 @@
 import pandas as pd
 import streamlit as st
 import sqlite3
-import numpy as np
+
 
 st.set_page_config(
     layout="wide",
@@ -14,7 +14,26 @@ conn = sqlite3.connect("db/db_producao.db")
 c = conn.cursor()
 
 
-# Variaveis
+# Funções
+def get_operator():
+    query = "SELECT name, office, created_at FROM operators"
+    df = pd.read_sql(query, con=conn)
+    return df
+
+def get_tear():
+    query = "SELECT name, model, created_at FROM teares"
+    df = pd.read_sql(query, con=conn)
+    return df
+
+def get_products_supplier():
+    query = "SELECT supplier, produto, created_at FROM products_suppliers"
+    df = pd.read_sql(query, con=conn)
+    return df
+
+def get_production():
+    query = "SELECT num_peca, tear, peso, product_supplier, check_production, operator, data FROM production"
+    df = pd.read_sql(query, con=conn)
+    return df
 
 
 # Sidebar
@@ -24,12 +43,24 @@ st.sidebar.markdown("Desenvolvido por [Kanydian Esteves](https://www.linkedin.co
 
 
 # Body
-col1, col2 = st.columns(2)
+df_production = get_production()
+
 if type_filter == "Teares":
-    st.title(":male-factory-worker: Em Desenvolvimento... ")
+    df_tear = get_tear()
+    tear = st.selectbox("Tear", df_tear["name"].unique())
+    df_filtered = df_production[df_production["tear"] == tear]
+    st.markdown(f"## Total registrado: {df_filtered['peso'].sum():.2f} Kg")
+    st.markdown(f"## Média: {df_filtered['peso'].mean():.2f} Kg")
+    
 
 if type_filter == "Operadores":
-    st.title(":male-office-worker: Em Desenvolvimento... ")
+    df = get_operator()
+    operator = st.selectbox("Operador", df["name"].unique())
+    df_filtered = df_production[df_production["operator"] == operator]
+    df_filtered
 
 if type_filter == "Fornecedor/Produto":
-    st.title(":male-construction-worker: Em Desenvolvimento... ")
+    df = get_products_supplier()
+    products_supplier = st.selectbox("Fornecedor/Cliente", df["supplier"].unique())
+    df_filtered = df_production[df_production["product_supplier"] == products_supplier]
+    df_filtered
