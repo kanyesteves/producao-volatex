@@ -6,8 +6,14 @@ from datetime import datetime
 
 st.set_page_config(
     layout="wide",
-    page_title="SysProduct-Volatex"
+    page_title="Produção-Volatex"
 )
+
+
+# Verifica permissão
+if st.session_state.get("tipo_usuario") != "admin":
+    st.error("Você não tem permissão para acessar esta página.")
+    st.stop()
 
 
 # Variáveis Globais
@@ -16,7 +22,7 @@ c = conn.cursor()
 
 
 # Sidebar
-register = st.sidebar.selectbox("Cadastrar", ["Tear", "Operador", "Fornecedor/Produto"])
+register = st.sidebar.selectbox("Cadastrar", ["Tear", "Operador", "Fornecedor/Artigo"])
 st.sidebar.divider()
 st.sidebar.markdown("Desenvolvido por [Kanydian Esteves](https://www.linkedin.com/in/kanydian-esteves-07b0531a7/)")
 
@@ -28,8 +34,6 @@ def save_tear(name_tear, model_tear):
         "INSERT INTO teares (name, model, created_at) VALUES (?, ?, ?)", (name_tear,  model_tear, current_date)
     )
     conn.commit()
-    name_tear = ""
-    model_tear = ""
 
 def save_operator(name_operator, office_operator):
     current_date = datetime.now()
@@ -37,8 +41,6 @@ def save_operator(name_operator, office_operator):
         "INSERT INTO operators (name, office, created_at) VALUES (?, ?, ?)", (name_operator,  office_operator, current_date)
     )
     conn.commit()
-    name_operator = ""
-    office_operator = ""
 
 def save_product_supplier(supplier, product):
     current_date = datetime.now()
@@ -46,8 +48,6 @@ def save_product_supplier(supplier, product):
         "INSERT INTO products_suppliers (supplier, produto, created_at) VALUES (?, ?, ?)", (supplier,  product, current_date)
     )
     conn.commit()
-    supplier = ""
-    product = ""
 
 
 # Body
@@ -69,8 +69,8 @@ if register == "Operador":
     if save:
         save_operator(name_operator, office_operator)
 
-if register == "Fornecedor/Produto":
-    st.title("Cadastrar Fornecedor/Cliente :factory:")
+if register == "Fornecedor/Artigo":
+    st.title("Cadastrar Fornecedor/Artigo :factory:")
     col1, col2 = st.columns(2)
     supplier  = col1.text_input("Fornecedor/Cliente")
     product = col2.text_input("Produto")
