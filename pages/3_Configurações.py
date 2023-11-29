@@ -59,6 +59,7 @@ if register == "Tear":
     save = st.button("Salvar")
     if save:
         save_tear(name_tear, model_tear)
+        st.success("Tear cadastrado com sucesso!!")
 
 if register == "Operador":
     st.title("Cadastrar Operador :male-factory-worker:")
@@ -68,6 +69,7 @@ if register == "Operador":
     save = st.button("Salvar")
     if save:
         save_operator(name_operator, office_operator)
+        st.success("Operador cadastrado com sucesso!!")
 
 if register == "Fornecedor/Artigo":
     st.title("Cadastrar Fornecedor/Artigo :factory:")
@@ -77,3 +79,4 @@ if register == "Fornecedor/Artigo":
     save = st.button("Salvar")
     if save:
         save_product_supplier(supplier, product)
+        st.success("Fornecedor/Artigo cadastrado com sucesso!!")

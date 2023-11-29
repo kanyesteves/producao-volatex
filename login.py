@@ -28,6 +28,6 @@ if login_button:
     tipo_usuario = verificar_login(username_input, password_input)
     if tipo_usuario:
         st.session_state.tipo_usuario = tipo_usuario
-        st.success(f"Login bem-sucedido! Tipo de usuário: {tipo_usuario}")
+        st.success(f"Login bem-sucedido!!")
     else:
         st.error("Usuário ou senha incorretos.")

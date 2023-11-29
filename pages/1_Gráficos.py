@@ -55,22 +55,32 @@ df_production["data"] = pd.to_datetime(df_production["data"])
 
 if type_filter == "Teares":
     df_tear = get_tear()
+
     tear = st.selectbox("Tear", df_tear["name"].unique())
     df_filtered = df_production[df_production["tear"] == tear]
-    col1, col2 = st.columns(2)
-    col1.markdown(f"### Total registrado: {df_filtered['peso'].sum():.2f} Kg")
-    df_filtered["Total"] = df_filtered['peso'].sum()
-    fig_tear_operator = px.pie(df_filtered, values="Total", names="product", title="Artigo")
-    col2.plotly_chart(fig_tear_operator, use_container_width=True)
 
-if type_filter == "Artigo/Produto":
-    df = get_products_supplier()
-    product = st.selectbox("Artigo", df["produto"].unique())
-    df_filtered = df_production[df_production["product"] == product]
     st.markdown(f"### Total registrado: {df_filtered['peso'].sum():.2f} Kg")
+
     df_filtered["mes"] = df_filtered["data"].apply(lambda x: str(x.month))
     month = st.selectbox("Mes", df_filtered["mes"].unique())
     df_filtered_month = df_filtered[df_filtered["mes"] == month]
+
+    st.markdown(f"### Total registrado: {df_filtered_month['peso'].sum():.2f} Kg")
+    df_filtered_month["dia"] = df_filtered_month["data"].apply(lambda x:str(x.day))
+    st.bar_chart(df_filtered_month, x="dia", y="peso", use_container_width=True)
+
+if type_filter == "Artigo/Produto":
+    df = get_products_supplier()
+
+    product = st.selectbox("Artigo", df["produto"].unique())
+    df_filtered = df_production[df_production["product"] == product]
+
+    st.markdown(f"### Total registrado: {df_filtered['peso'].sum():.2f} Kg")
+
+    df_filtered["mes"] = df_filtered["data"].apply(lambda x: str(x.month))
+    month = st.selectbox("Mes", df_filtered["mes"].unique())
+    df_filtered_month = df_filtered[df_filtered["mes"] == month]
+
     st.markdown(f"### Total registrado: {df_filtered_month['peso'].sum():.2f} Kg")
     df_filtered_month["dia"] = df_filtered_month["data"].apply(lambda x:str(x.day))
     st.bar_chart(df_filtered_month, x="dia", y="peso", use_container_width=True)
