@@ -81,12 +81,16 @@ if insert:
 
 
 df_production = get_production()
+
+df_production_tear = df_production[df_production["tear"] == tear]
+df_production_supplier = df_production_tear[df_production_tear["supplier"] == supplier]
+df_production_filtered = df_production_supplier[df_production_supplier["product"] == product]
 st.markdown("## Último registro")
 col1, col2 = st.columns(2)
-col1.markdown(f"**Número da peça**: {df_production.iloc[-1]['num_peca']}")
-col1.markdown(f"**Tear**: {df_production.iloc[-1]['tear']}")
-col1.markdown(f"**Fornecedor**: {df_production.iloc[-1]['supplier']}")
-col1.markdown(f"**Artigo**: {df_production.iloc[-1]['product']}")
-col2.markdown(f"**Peso**: {df_production.iloc[-1]['peso']}")
-col2.markdown(f"**Operador**: {df_production.iloc[-1]['operator']}")
-col2.markdown(f"**Revisão**: {df_production.iloc[-1]['check_production']}")
+col1.markdown(f"**Número da peça**: {df_production_filtered.iloc[-1]['num_peca']}")
+col1.markdown(f"**Tear**: {df_production_filtered.iloc[-1]['tear']}")
+col1.markdown(f"**Fornecedor**: {df_production_filtered.iloc[-1]['supplier']}")
+col1.markdown(f"**Artigo**: {df_production_filtered.iloc[-1]['product']}")
+col2.markdown(f"**Peso**: {df_production_filtered.iloc[-1]['peso']}")
+col2.markdown(f"**Operador**: {df_production_filtered.iloc[-1]['operator']}")
+col2.markdown(f"**Revisão**: {df_production_filtered.iloc[-1]['check_production']}")
