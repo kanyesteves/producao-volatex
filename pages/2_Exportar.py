@@ -60,7 +60,7 @@ if type_filter == "Artigo/Produto":
     df_filtered_supplier = df[df["supplier"] == supplier]
     product = col2.selectbox("Artigo", df_filtered_supplier["produto"].unique())
 
-    df_filtered = df_production[df_production["product"] == product]
+    df_filtered = df_production[(df_production["product"] == product) & (df_production["supplier"] == supplier)]
     columns_translated = "Numero-peça Tear Peso Fornecedor Artigo Revisão Operador Data".split()
     df_filtered.columns = columns_translated
     df_filtered
@@ -72,8 +72,7 @@ if type_filter == "Artigo/Produto":
     
     
 date_now = str(datetime.now())
-st.download_button(label="Exportar", 
-                    data=file_export, 
+st.download_button(label="Exportar", data=file_export, 
                     file_name=f"{supplier}-{product}-{date_now}{format_file}", 
                     mime=f"text/{format_file}")
     

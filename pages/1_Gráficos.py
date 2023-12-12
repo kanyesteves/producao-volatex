@@ -72,8 +72,11 @@ if type_filter == "Teares":
 if type_filter == "Artigo/Produto":
     df = get_products_supplier()
 
-    product = st.selectbox("Artigo", df["produto"].unique())
-    df_filtered = df_production[df_production["product"] == product]
+    col1, col2 = st.columns(2)
+    supplier = col1.selectbox("Fornecedor", df["supplier"].unique())
+    df_filtered_supplier = df[df["supplier"] == supplier]
+    product = col2.selectbox("Artigo", df_filtered_supplier["produto"].unique())
+    df_filtered = df_production[(df_production["product"] == product) & (df_production["supplier"] == supplier)]
 
     st.markdown(f"### Total registrado: {df_filtered['peso'].sum():.2f} Kg")
 
