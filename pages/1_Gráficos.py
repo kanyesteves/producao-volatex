@@ -67,7 +67,7 @@ if type_filter == "Teares":
 
     st.markdown(f"### Total registrado: {df_filtered_month['peso'].sum():.2f} Kg")
     df_filtered_month["dia"] = df_filtered_month["data"].apply(lambda x:str(x.day))
-    st.bar_chart(df_filtered_month, x="dia", y="peso", use_container_width=True)
+    st.bar_chart(df_filtered_month, x="dia", y="peso", color="product", use_container_width=True)
 
 if type_filter == "Artigo/Produto":
     df = get_products_supplier()

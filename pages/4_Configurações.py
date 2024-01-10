@@ -22,7 +22,8 @@ c = conn.cursor()
 
 
 # Sidebar
-register = st.sidebar.selectbox("Cadastrar", ["Tear", "Operador", "Fornecedor/Artigo"])
+register = st.sidebar.selectbox("", ["Tear", "Operador", "Fornecedor/Artigo", "Produção"])
+operation = st.sidebar.radio("", ["Cadastrar", "Editar"])
 st.sidebar.divider()
 st.sidebar.markdown("Desenvolvido por [Kanydian Esteves](https://www.linkedin.com/in/kanydian-esteves-07b0531a7/)")
 
@@ -52,17 +53,24 @@ def save_product_supplier(supplier, product):
 
 # Body
 if register == "Tear":
-    st.title("Cadastrar Tear :toolbox:")
-    col1, col2 = st.columns(2)
-    name_tear  = col1.text_input("Nome")
-    model_tear = col2.text_input("Modelo")
-    save = st.button("Salvar")
-    if save:
-        save_tear(name_tear, model_tear)
-        st.success("Tear cadastrado com sucesso!!")
+    if operation == "Cadastrar":
+        st.title("Cadastrar Tear")
+        col1, col2 = st.columns(2)
+        name_tear  = col1.text_input("Nome")
+        model_tear = col2.text_input("Modelo")
+        save = st.button("Salvar")
+        if save:
+            save_tear(name_tear, model_tear)
+            st.success("Tear cadastrado com sucesso!!")
+    
+    if operation == "Editar":
+        st.title("Editar Tear")
+        col1, col2, col3 = st.columns(3)
+        
+
 
 if register == "Operador":
-    st.title("Cadastrar Operador :male-factory-worker:")
+    st.title("Cadastrar Operador")
     col1, col2 = st.columns(2)
     name_operator  = col1.text_input("Nome")
     office_operator = col2.text_input("Cargo")
@@ -72,7 +80,7 @@ if register == "Operador":
         st.success("Operador cadastrado com sucesso!!")
 
 if register == "Fornecedor/Artigo":
-    st.title("Cadastrar Fornecedor/Artigo :factory:")
+    st.title("Cadastrar Fornecedor/Artigo")
     col1, col2 = st.columns(2)
     supplier  = col1.text_input("Fornecedor/Cliente")
     product = col2.text_input("Produto")

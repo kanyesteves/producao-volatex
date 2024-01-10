@@ -65,10 +65,8 @@ if type_filter == "Artigo/Produto":
     df_filtered.columns = columns_translated
     df_filtered
 
-    format_file = st.radio("Formato para exportação:", [".csv"])
-
-    if format_file == ".csv":
-        file_export = df_to_dataset(format_file, df_filtered)
+    format_file = ".csv"
+    file_export = df_to_dataset(format_file, df_filtered)
     
     
 date_now = str(datetime.now())

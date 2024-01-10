@@ -1,1 +1,4 @@
 generate_tables.py
+db/
+prodVolatex/
+datasets/
