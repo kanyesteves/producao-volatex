@@ -45,11 +45,11 @@ if type_filter == "Artigo/Produto":
 
 
     col1, col2 = st.columns(2)
-    supplier = col1.selectbox("Fornecedor", df["supplier"].unique())
-    df_filtered_supplier = df[df["supplier"] == supplier]
+    supplier = col1.selectbox("Fornecedor", df["fornecedor"].unique())
+    df_filtered_supplier = df[df["fornecedor"] == supplier]
     product = col2.selectbox("Artigo", df_filtered_supplier["produto"].unique())
 
-    df_filtered = df_production[(df_production["product"] == product) & (df_production["supplier"] == supplier)]
+    df_filtered = df_production[(df_production["produto"] == product) & (df_production["fornecedor"] == supplier)]
     columns_translated = "Numero-peça Tear Peso Fornecedor Artigo Revisão Operador Data".split()
     df_filtered.columns = columns_translated
     st.table(df_filtered)

@@ -33,21 +33,21 @@ st.sidebar.markdown("Desenvolvido por [Kanydian Esteves](https://www.linkedin.co
 def save_tear(name_tear, model_tear):
     current_date = datetime.now()
     c.execute(
-        "INSERT INTO teares (name, model, created_at) VALUES (?, ?, ?)", (name_tear,  model_tear, current_date)
+        "INSERT INTO teares (nome, modelo, created_at) VALUES (?, ?, ?)", (name_tear,  model_tear, current_date)
     )
     conn.commit()
 
 def save_operator(name_operator, office_operator):
     current_date = datetime.now()
     c.execute(
-        "INSERT INTO operators (name, office, created_at) VALUES (?, ?, ?)", (name_operator,  office_operator, current_date)
+        "INSERT INTO operators (name, cargo, created_at) VALUES (?, ?, ?)", (name_operator,  office_operator, current_date)
     )
     conn.commit()
 
 def save_product_supplier(supplier, product):
     current_date = datetime.now()
     c.execute(
-        "INSERT INTO products_suppliers (supplier, produto, created_at) VALUES (?, ?, ?)", (supplier,  product, current_date)
+        "INSERT INTO products_suppliers (fornecedor, produto, created_at) VALUES (?, ?, ?)", (supplier,  product, current_date)
     )
     conn.commit()
 
@@ -119,15 +119,15 @@ if operation == "Editar":
     df_production = db.get_production()
     df = db.get_products_supplier()
     col1, col2 = st.columns(2)
-    supplier = col1.selectbox("Fornecedor", df["supplier"].unique())
-    df_filtered_supplier = df[df["supplier"] == supplier]
+    supplier = col1.selectbox("Fornecedor", df["fornecedor"].unique())
+    df_filtered_supplier = df[df["fornecedor"] == supplier]
     product = col2.selectbox("Artigo", df_filtered_supplier["produto"].unique())
-    df_filtered = df_production[(df_production["product"] == product) & (df_production["supplier"] == supplier)]
+    df_filtered = df_production[(df_production["produto"] == product) & (df_production["fornecedor"] == supplier)]
     df_filtered = df_filtered.set_index("id")
     st.table(df_filtered)
     col3, col4, col5 = st.columns([1, 2, 3])
     id_peca      = col3.text_input("ID - produção")
-    column_table = col4.selectbox("Coluna - produção", ["num_peca", "peso", "supplier", "product", "check_production", "operator"])
+    column_table = col4.selectbox("Coluna - produção", ["numero_peça", "peso", "fornecedor", "produto", "revisao", "operador"])
     if column_table == "peso":
         value = col5.number_input("Valor - produção")
     else:
@@ -146,7 +146,7 @@ if operation == "Editar":
     st.table(df)
     col6, col7, col8 = st.columns([1, 2, 3])
     id_supplier  = col6.text_input("ID - fornecedor")
-    column_table = col7.selectbox("Coluna - fornecedor", ["supplier", "produto"])
+    column_table = col7.selectbox("Coluna - fornecedor", ["fornecedor", "produto"])
     value        = col8.text_input("Valor - fornecedor")
     update = st.button("Atualizar fornecedor")
     if update:
@@ -161,7 +161,7 @@ if operation == "Editar":
     st.table(df)
     col9, col10, col11 = st.columns([1, 2, 3])
     id_tear      = col9.text_input("ID - tear")
-    column_table = col10.selectbox("Coluna - tear", ["name", "model"])
+    column_table = col10.selectbox("Coluna - tear", ["nome", "modelo"])
     value        = col11.text_input("Valor - tear")
     update = st.button("Atualizar tear")
     if update:
@@ -176,7 +176,7 @@ if operation == "Editar":
     st.table(df)
     col12, col13, col14 = st.columns([1, 2, 3])
     id_operator  = col12.text_input("ID - operador")
-    column_table = col13.selectbox("Coluna - operador", ["name", "office"])
+    column_table = col13.selectbox("Coluna - operador", ["nome", "cargo"])
     value        = col14.text_input("Valor - operador")
     update = st.button("Atualizar operador")
     if update:

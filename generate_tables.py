@@ -6,6 +6,7 @@ c = conn.cursor()
 
 # Querys
 c.execute(
+    "ALTER TABLE operators RENAME office to cargo"
     # "CREATE TABLE production ([id] INTEGER PRIMARY KEY, [num_peca] VARCHAR NOT NULL, [tear] VARCHAR NOT NULL, [peso] FLOAT NOT NULL, [supplier] VARCHAR NOT NULL, [product] VARCHAR NOT NULL, [check_production] VARCHAR NOT NULL, [operator] VARCHAR NOT NULL, [data] DATETIME)"
     # "DELETE FROM production"
     # "DELETE FROM teares"
