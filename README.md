@@ -1,17 +1,18 @@
 # Produção Volatex - Documentação
-Este documento tem como objetivo descrever o que será usado de tecnologias e como será construído.
 
-### Tecnologias - Linguagens de programação
-- Python 3
+## Introdução
 
-### Tecnologias - Bibliotecas
-- Pandas
-- Streamlit
-- Plotly
-- Sqlite 3
-- Datetime
+#### Descrição Geral:
+Este sistema foi desenvolvido para efetuar o controle e a gestão de produção para malharias.
 
-### Indicadores
-- Tear
-- Operador/Tecelão
-- Fornecedor/Produto
+#### Objetivo da documentação:
+Está documentação foi pensada naquele programador que já contém alguns conhecimentos e experiências em desenvolvimento de sistemas no geral.
+
+## Requisitos prévios
+
+#### Dependências:
+- [Streamlit](https://streamlit.io/)
+- [Pandas](https://pandas.pydata.org/docs/getting_started/index.html)
+- [Plotly](https://plotly.com/python/)
+- [Requests](https://requests.readthedocs.io/en/latest/)
+- [SQLite3](https://www.sqlite.org/docs.html)
