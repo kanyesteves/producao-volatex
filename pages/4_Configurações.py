@@ -24,7 +24,7 @@ db = Functions(conn)
 
 
 ##################### Sidebar #####################
-operation = st.sidebar.radio("", ["Cadastrar", "Editar"])
+operation = st.sidebar.radio("", ["Cadastrar", "Editar", "Remover"])
 st.sidebar.divider()
 st.sidebar.markdown("Desenvolvido por [Kanydian Esteves](https://www.linkedin.com/in/kanydian-esteves-07b0531a7/)")
 
@@ -79,6 +79,22 @@ def update_operator(id_operator, column_table, value):
     )
     conn.commit()
 
+def delete_production(id_peca):
+    c.execute(f"DELETE FROM production WHERE id = {id_peca}")
+    conn.commit()
+
+def delete_tear(id_tear):
+    c.execute(f"DELETE FROM teares WHERE id = {id_tear}")
+    conn.commit()
+
+def delete_operator(id_operator):
+    c.execute(f"DELETE FROM operators WHERE id = {id_operator}")
+    conn.commit()
+
+def delete_products_suppliers(id_supplier):
+    c.execute(f"DELETE FROM products_suppliers WHERE id = {id_supplier}")
+    conn.commit()
+
 
 ##################### BODY #####################
 if operation == "Cadastrar":
@@ -90,7 +106,7 @@ if operation == "Cadastrar":
     save = st.button("Salvar fornecedor")
     if save:
         save_product_supplier(supplier, product)
-        st.success("Fornecedor/Artigo cadastrado com sucesso!!")
+        st.toast("Fornecedor/Artigo cadastrado com sucesso!!")
 
     st.divider()
     st.subheader("Tear")
@@ -100,7 +116,7 @@ if operation == "Cadastrar":
     save = st.button("Salvar tear")
     if save:
         save_tear(name_tear, model_tear)
-        st.success("Tear cadastrado com sucesso!!")
+        st.toast("Tear cadastrado com sucesso!!")
 
     st.divider()
     st.subheader("Operador")
@@ -110,10 +126,14 @@ if operation == "Cadastrar":
     save = st.button("Salvar operador")
     if save:
         save_operator(name_operator, office_operator)
-        st.success("Operador cadastrado com sucesso!!")
+        st.toast("Operador cadastrado com sucesso!!")
 
-if operation == "Editar":
-    st.title("Editar")
+else:
+    if operation == "Editar":
+        st.title("Editar")
+    elif operation == "Remover":
+        st.title("Remover")
+
 
     st.subheader("Produção")
     df_production = db.get_production()
@@ -125,18 +145,29 @@ if operation == "Editar":
     df_filtered = df_production[(df_production["produto"] == product) & (df_production["fornecedor"] == supplier)]
     df_filtered = df_filtered.set_index("id")
     st.table(df_filtered)
-    col3, col4, col5 = st.columns([1, 2, 3])
-    id_peca      = col3.text_input("ID - produção")
-    column_table = col4.selectbox("Coluna - produção", ["numero_peça", "peso", "fornecedor", "produto", "revisao", "operador"])
-    if column_table == "peso":
-        value = col5.number_input("Valor - produção")
-    else:
-        value = col5.text_input("Valor - produção")
 
-    update = st.button("Atualizar registro")
-    if update:
-        update_production(id_peca, column_table, value)
-        st.success("Registro atualizado com sucesso!!")
+    if operation == "Editar":
+        col3, col4, col5 = st.columns([1, 2, 3])
+        id_peca      = col3.text_input("ID - produção")
+        column_table = col4.selectbox("Coluna - produção", ["numero_peça", "peso", "fornecedor", "produto", "revisao", "operador"])
+
+        if column_table == "peso":
+            value = col5.number_input("Valor - produção")
+        else:
+            value = col5.text_input("Valor - produção")
+
+        update = st.button("Atualizar registro")
+        if update:
+            update_production(id_peca, column_table, value)
+            st.toast("Registro atualizado com sucesso!!")
+
+    elif operation == "Remover":
+        col1, col2 = st.columns([1, 5])
+        id_peca = col1.text_input("ID - produção")
+        delete = st.button("Remover registro")
+        if delete:
+            delete_production(id_peca)
+            st.toast("Registro removido com sucesso!!")
         
 
     st.divider()
@@ -144,14 +175,24 @@ if operation == "Editar":
     df_products_supplier = db.get_products_supplier()
     df = df_products_supplier.set_index("id")
     st.table(df)
-    col6, col7, col8 = st.columns([1, 2, 3])
-    id_supplier  = col6.text_input("ID - fornecedor")
-    column_table = col7.selectbox("Coluna - fornecedor", ["fornecedor", "produto"])
-    value        = col8.text_input("Valor - fornecedor")
-    update = st.button("Atualizar fornecedor")
-    if update:
-        update_products_supplier(id_supplier, column_table, value)
-        st.success("Fornecedor atualizado com sucesso!!")
+
+    if operation == "Editar":
+        col6, col7, col8 = st.columns([1, 2, 3])
+        id_supplier  = col6.text_input("ID - fornecedor")
+        column_table = col7.selectbox("Coluna - fornecedor", ["fornecedor", "produto"])
+        value        = col8.text_input("Valor - fornecedor")
+        update = st.button("Atualizar fornecedor")
+        if update:
+            update_products_supplier(id_supplier, column_table, value)
+            st.toast("Fornecedor atualizado com sucesso!!")
+
+    elif operation == "Remover":
+        col1, col2 = st.columns([1, 5])
+        id_supplier = col1.text_input("ID - Fornecedor")
+        delete = st.button("Remover fornecedor")
+        if delete:
+            delete_products_suppliers(id_supplier)
+            st.toast("Fornecedor removido com sucesso!!")
 
 
     st.divider()
@@ -159,14 +200,24 @@ if operation == "Editar":
     df_tear = db.get_tear()
     df = df_tear.set_index("id")
     st.table(df)
-    col9, col10, col11 = st.columns([1, 2, 3])
-    id_tear      = col9.text_input("ID - tear")
-    column_table = col10.selectbox("Coluna - tear", ["nome", "modelo"])
-    value        = col11.text_input("Valor - tear")
-    update = st.button("Atualizar tear")
-    if update:
-        update_tear(id_tear, column_table, value)
-        st.success("Tear atualizado com sucesso!!")
+
+    if operation == "Editar":
+        col9, col10, col11 = st.columns([1, 2, 3])
+        id_tear      = col9.text_input("ID - tear")
+        column_table = col10.selectbox("Coluna - tear", ["nome", "modelo"])
+        value        = col11.text_input("Valor - tear")
+        update = st.button("Atualizar tear")
+        if update:
+            update_tear(id_tear, column_table, value)
+            st.toast("Tear atualizado com sucesso!!")
+
+    elif operation == "Remover":
+        col1, col2 = st.columns([1, 5])
+        id_tear = col1.text_input("ID - tear")
+        delete = st.button("Remover tear")
+        if delete:
+            delete_products_suppliers(id_tear)
+            st.toast("Tear removido com sucesso!!")
 
 
     st.divider()
@@ -174,11 +225,21 @@ if operation == "Editar":
     df_operator = db.get_operator()
     df = df_operator.set_index("id")
     st.table(df)
-    col12, col13, col14 = st.columns([1, 2, 3])
-    id_operator  = col12.text_input("ID - operador")
-    column_table = col13.selectbox("Coluna - operador", ["nome", "cargo"])
-    value        = col14.text_input("Valor - operador")
-    update = st.button("Atualizar operador")
-    if update:
-        update_operator(id_operator, column_table, value)
-        st.success("Operador atualizado com sucesso!!")
+
+    if operation == "Editar":
+        col12, col13, col14 = st.columns([1, 2, 3])
+        id_operator  = col12.text_input("ID - operador")
+        column_table = col13.selectbox("Coluna - operador", ["nome", "cargo"])
+        value        = col14.text_input("Valor - operador")
+        update = st.button("Atualizar operador")
+        if update:
+            update_operator(id_operator, column_table, value)
+            st.toast("Operador atualizado com sucesso!!")
+
+    elif operation == "Remover":
+        col1, col2 = st.columns([1, 5])
+        id_operator = col1.text_input("ID - operador")
+        delete = st.button("Remover operador")
+        if delete:
+            delete_operator(id_operator)
+            st.toast("Operador removido com sucesso!!")
