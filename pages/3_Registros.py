@@ -3,7 +3,9 @@ import streamlit as st
 import sqlite3
 from datetime import datetime
 from lib import Functions
-
+import firebase_admin
+from firebase_admin import credentials
+from firebase_admin import firestore
 
 st.set_page_config(
     layout="wide",
@@ -19,13 +21,15 @@ if st.session_state.get("tipo_usuario") != "admin" and st.session_state.get("tip
 conn = sqlite3.connect("db/db_producao.db")
 c = conn.cursor()
 db = Functions(conn)
-
+if not firebase_admin._apps:
+    cred = credentials.Certificate("db-firestore-volatex-firebase-adminsdk.json")
+    app = firebase_admin.initialize_app(cred)
 
 ##################### Sidebar #####################
 st.sidebar.markdown("Desenvolvido por [Kanydian Esteves](https://www.linkedin.com/in/kanydian-esteves-07b0531a7/)")
 
 
-##################### Funções #####################
+##################### Funções ##################### 
 def save(num_peca, peso, tear, operator, supplier, product, check):
     current_date = datetime.now()
     c.execute(
@@ -53,7 +57,19 @@ check       = st.text_input("Revisão")
 insert      = st.button("Registrar")
 if insert:
     save(num_peca, peso, tear, operator, supplier, product, check)
-    st.success("Resgistrado com sucesso !!")
+    current_date = datetime.now()
+    db_firestore_production = firestore.client().collection("volatex-production").document(f"{num_peca}-{supplier}-{product}")
+    db_firestore_production.set({
+        "numero_peça": num_peca,
+        "peso": peso,
+        "tear": tear,
+        "operador": operator,
+        "fornecedor": supplier,
+        "produto": product,
+        "revisao": check,
+        "data": current_date
+    }) 
+    st.toast("Resgistrado com sucesso !!")
 
 
 df_production          = db.get_production()
