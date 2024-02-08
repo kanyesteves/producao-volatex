@@ -2,7 +2,7 @@ import streamlit as st
 import sqlite3
 import pandas as pd
 from datetime import datetime
-from lib import Functions
+from lib import Services
 
 
 st.set_page_config(
@@ -19,7 +19,7 @@ if st.session_state.get("tipo_usuario") != "admin":
 # Variáveis Globais
 conn = sqlite3.connect("db/db_producao.db")
 c = conn.cursor()
-db = Functions(conn)
+db = Services(conn)
 
 
 ##################### Sidebar #####################

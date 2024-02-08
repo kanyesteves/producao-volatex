@@ -1,9 +1,9 @@
 import pandas as pd
-import streamlit as st
 import sqlite3
-from datetime import datetime
-from lib import Functions
 import firebase_admin
+import streamlit as st
+from lib import Services
+from datetime import datetime
 from firebase_admin import credentials
 from firebase_admin import firestore
 
@@ -20,22 +20,13 @@ if st.session_state.get("tipo_usuario") != "admin" and st.session_state.get("tip
 # Variáveis Globais
 conn = sqlite3.connect("db/db_producao.db")
 c = conn.cursor()
-db = Functions(conn)
+db = Services(conn)
 if not firebase_admin._apps:
     cred = credentials.Certificate("db-firestore-volatex-firebase-adminsdk.json")
     app = firebase_admin.initialize_app(cred)
 
 ##################### Sidebar #####################
 st.sidebar.markdown("Desenvolvido por [Kanydian Esteves](https://www.linkedin.com/in/kanydian-esteves-07b0531a7/)")
-
-
-##################### Funções ##################### 
-def save(num_peca, peso, tear, operator, supplier, product, check):
-    current_date = datetime.now()
-    c.execute(
-        "INSERT INTO production (numero_peça, peso, tear, operador, fornecedor, produto, revisao, data) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", (num_peca, peso, tear, operator, supplier, product, check, current_date)
-    )
-    conn.commit()
 
 
 ##################### BODY #####################
@@ -56,19 +47,7 @@ operator    = col5.selectbox("Operador", df_operator["nome"].unique())
 check       = st.text_input("Revisão")
 insert      = st.button("Registrar")
 if insert:
-    save(num_peca, peso, tear, operator, supplier, product, check)
-    current_date = datetime.now()
-    db_firestore_production = firestore.client().collection("volatex-production").document(f"{num_peca}-{supplier}-{product}")
-    db_firestore_production.set({
-        "numero_peça": num_peca,
-        "peso": peso,
-        "tear": tear,
-        "operador": operator,
-        "fornecedor": supplier,
-        "produto": product,
-        "revisao": check,
-        "data": current_date
-    }) 
+    db.save(num_peca, peso, tear, operator, supplier, product, check)
     st.toast("Resgistrado com sucesso !!")
 
 
