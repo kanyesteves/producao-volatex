@@ -4,8 +4,6 @@ import firebase_admin
 import streamlit as st
 from lib import Services
 from datetime import datetime
-from firebase_admin import credentials
-from firebase_admin import firestore
 
 st.set_page_config(
     layout="wide",
@@ -21,9 +19,6 @@ if st.session_state.get("tipo_usuario") != "admin" and st.session_state.get("tip
 conn = sqlite3.connect("db/db_producao.db")
 c = conn.cursor()
 db = Services(conn)
-if not firebase_admin._apps:
-    cred = credentials.Certificate("db-firestore-volatex-firebase-adminsdk.json")
-    app = firebase_admin.initialize_app(cred)
 
 ##################### Sidebar #####################
 st.sidebar.markdown("Desenvolvido por [Kanydian Esteves](https://www.linkedin.com/in/kanydian-esteves-07b0531a7/)")
@@ -47,7 +42,7 @@ operator    = col5.selectbox("Operador", df_operator["nome"].unique())
 check       = st.text_input("Revisão")
 insert      = st.button("Registrar")
 if insert:
-    db.save(num_peca, peso, tear, operator, supplier, product, check)
+    result = db.save_production(num_peca, peso, tear, operator, supplier, product, check, False)
     st.toast("Resgistrado com sucesso !!")
 
 
@@ -55,13 +50,15 @@ df_production          = db.get_production()
 df_production_tear     = df_production[df_production["tear"] == tear]
 df_production_supplier = df_production_tear[df_production_tear["fornecedor"] == supplier]
 df_production_filtered = df_production_supplier[df_production_supplier["produto"] == product]
+df_production_not_removed = df_production_filtered.drop(df_production_filtered[df_production_filtered["remove"] == True].index)
+df_production_not_removed = df_production_not_removed.drop("remove", axis=1).copy()
 
 st.markdown("## Último registro")
 col1, col2 = st.columns(2)
-col1.markdown(f"**Número da peça**: {df_production_filtered.iloc[-1]['numero_peça']}")
-col1.markdown(f"**Tear**:           {df_production_filtered.iloc[-1]['tear']}")
-col1.markdown(f"**Fornecedor**:     {df_production_filtered.iloc[-1]['fornecedor']}")
-col1.markdown(f"**Artigo**:         {df_production_filtered.iloc[-1]['produto']}")
-col2.markdown(f"**Peso**:           {df_production_filtered.iloc[-1]['peso']}")
-col2.markdown(f"**Operador**:       {df_production_filtered.iloc[-1]['operador']}")
-col2.markdown(f"**Revisão**:        {df_production_filtered.iloc[-1]['revisao']}")
+col1.markdown(f"**Número da peça**: {df_production_not_removed.iloc[-1]['num_peça']}")
+col1.markdown(f"**Tear**:           {df_production_not_removed.iloc[-1]['tear']}")
+col1.markdown(f"**Fornecedor**:     {df_production_not_removed.iloc[-1]['fornecedor']}")
+col1.markdown(f"**Artigo**:         {df_production_not_removed.iloc[-1]['produto']}")
+col2.markdown(f"**Peso**:           {df_production_not_removed.iloc[-1]['peso']}")
+col2.markdown(f"**Operador**:       {df_production_not_removed.iloc[-1]['operador']}")
+col2.markdown(f"**Revisão**:        {df_production_not_removed.iloc[-1]['revisao']}")

@@ -29,83 +29,16 @@ st.sidebar.divider()
 st.sidebar.markdown("Desenvolvido por [Kanydian Esteves](https://www.linkedin.com/in/kanydian-esteves-07b0531a7/)")
 
 
-##################### Funções #####################
-def save_tear(name_tear, model_tear):
-    current_date = datetime.now()
-    c.execute(
-        "INSERT INTO teares (nome, modelo, created_at) VALUES (?, ?, ?)", (name_tear,  model_tear, current_date)
-    )
-    conn.commit()
-
-def save_operator(name_operator, office_operator):
-    current_date = datetime.now()
-    c.execute(
-        "INSERT INTO operators (name, cargo, created_at) VALUES (?, ?, ?)", (name_operator,  office_operator, current_date)
-    )
-    conn.commit()
-
-def save_product_supplier(supplier, product):
-    current_date = datetime.now()
-    c.execute(
-        "INSERT INTO products_suppliers (fornecedor, produto, created_at) VALUES (?, ?, ?)", (supplier,  product, current_date)
-    )
-    conn.commit()
-
-def update_production(id_peca, column_table, value):
-    query = f"UPDATE production SET {column_table} = ? WHERE id = ?"
-    c.execute(
-        query, (value, id_peca)
-    )
-    conn.commit()
-
-def update_products_supplier(id_supplier, column_table, value):
-    query = f"UPDATE products_suppliers SET {column_table} = ? WHERE id = ?"
-    c.execute(
-        query, (value, id_supplier)
-    )
-    conn.commit()
-
-def update_tear(id_tear, column_table, value):
-    query = f"UPDATE teares SET {column_table} = ? WHERE id = ?"
-    c.execute(
-        query, (value, id_tear)
-    )
-    conn.commit()
-
-def update_operator(id_operator, column_table, value):
-    query = f"UPDATE operators SET {column_table} = ? WHERE id = ?"
-    c.execute(
-        query, (value, id_operator)
-    )
-    conn.commit()
-
-def delete_production(id_peca):
-    c.execute(f"DELETE FROM production WHERE id = {id_peca}")
-    conn.commit()
-
-def delete_tear(id_tear):
-    c.execute(f"DELETE FROM teares WHERE id = {id_tear}")
-    conn.commit()
-
-def delete_operator(id_operator):
-    c.execute(f"DELETE FROM operators WHERE id = {id_operator}")
-    conn.commit()
-
-def delete_products_suppliers(id_supplier):
-    c.execute(f"DELETE FROM products_suppliers WHERE id = {id_supplier}")
-    conn.commit()
-
-
 ##################### BODY #####################
 if operation == "Cadastrar":
     st.title("Cadastrar")
     st.subheader("Fornecedor/Artigo")
     col1, col2 = st.columns(2)
     supplier  = col1.text_input("Fornecedor/Cliente")
-    product = col2.text_input("Produto")
+    product   = col2.text_input("Produto")
     save = st.button("Salvar fornecedor")
     if save:
-        save_product_supplier(supplier, product)
+        db.save_product_supplier(supplier, product, False)
         st.toast("Fornecedor/Artigo cadastrado com sucesso!!")
 
     st.divider()
@@ -115,7 +48,7 @@ if operation == "Cadastrar":
     model_tear = col2.text_input("Modelo")
     save = st.button("Salvar tear")
     if save:
-        save_tear(name_tear, model_tear)
+        db.save_tear(name_tear, model_tear, False)
         st.toast("Tear cadastrado com sucesso!!")
 
     st.divider()
@@ -125,7 +58,7 @@ if operation == "Cadastrar":
     office_operator = col2.text_input("Cargo")
     save = st.button("Salvar operador")
     if save:
-        save_operator(name_operator, office_operator)
+        db.save_operator(name_operator, office_operator, False)
         st.toast("Operador cadastrado com sucesso!!")
 
 else:
@@ -135,6 +68,7 @@ else:
         st.title("Remover")
 
 
+####################3333############################
     st.subheader("Produção")
     df_production = db.get_production()
     df = db.get_products_supplier()
@@ -143,103 +77,116 @@ else:
     df_filtered_supplier = df[df["fornecedor"] == supplier]
     product = col2.selectbox("Artigo", df_filtered_supplier["produto"].unique())
     df_filtered = df_production[(df_production["produto"] == product) & (df_production["fornecedor"] == supplier)]
-    df_filtered = df_filtered.set_index("id")
-    st.table(df_filtered)
+    df_production_not_removed = df_filtered.drop(df_filtered[df_filtered["remove"] == True].index)
+    df_production_not_removed = df_production_not_removed.drop("remove", axis=1).copy()
+    st.table(df_production_not_removed)
 
     if operation == "Editar":
-        col3, col4, col5 = st.columns([1, 2, 3])
-        id_peca      = col3.text_input("ID - produção")
-        column_table = col4.selectbox("Coluna - produção", ["numero_peça", "peso", "fornecedor", "produto", "revisao", "operador"])
-
-        if column_table == "peso":
-            value = col5.number_input("Valor - produção")
-        else:
-            value = col5.text_input("Valor - produção")
+        col1, col2, col3 = st.columns([0.5, 1, 2])
+        col4, col5, col6, col7 = st.columns([0.5, 1, 1, 2])
+        num_peca      = col1.text_input("Numero peça - produção")
+        supplier      = col2.text_input("Fornecedor - produção")
+        product       = col3.text_input("Produto - produção")
+        peso          = col4.number_input("Peso - produção")
+        operator      = col5.text_input("Operador - produção")
+        tear          = col6.text_input("Tear - produção")
+        check         = col7.text_input("Revisão - produção")
 
         update = st.button("Atualizar registro")
         if update:
-            update_production(id_peca, column_table, value)
+            db.save_production(num_peca, peso, tear, operator, supplier, product, check, False)
             st.toast("Registro atualizado com sucesso!!")
 
     elif operation == "Remover":
-        col1, col2 = st.columns([1, 5])
-        id_peca = col1.text_input("ID - produção")
+        col1, col2, col3 = st.columns([2, 2, 2])
+        col4, col5, col6 = st.columns([2, 2, 2])
+        num_peca      = col1.text_input("Numero peça - produção")
+        peso          = col2.number_input("Peso - produção")
+        tear          = col3.text_input("Tear - produção")
+        operator      = col4.text_input("Operador - produção")
+        supplier      = col5.text_input("Fornecedor - produção")
+        product       = col6.text_input("Produto - produção")
+        check         = col6.text_input("Revisão - produção")
         delete = st.button("Remover registro")
         if delete:
-            delete_production(id_peca)
+            db.save_production(id_peca)
             st.toast("Registro removido com sucesso!!")
-        
+####################3333############################
+
 
     st.divider()
     st.subheader("Fornecedor")
     df_products_supplier = db.get_products_supplier()
-    df = df_products_supplier.set_index("id")
-    st.table(df)
+    df_products_supplier_not_removed = df_products_supplier.drop(df_products_supplier[df_products_supplier["remove"] == True].index)
+    df_products_supplier_not_removed = df_products_supplier_not_removed.drop("remove", axis=1).copy()
+    st.table(df_products_supplier_not_removed)
 
     if operation == "Editar":
-        col6, col7, col8 = st.columns([1, 2, 3])
-        id_supplier  = col6.text_input("ID - fornecedor")
-        column_table = col7.selectbox("Coluna - fornecedor", ["fornecedor", "produto"])
-        value        = col8.text_input("Valor - fornecedor")
+        col1, col2 = st.columns([2, 2])
+        name_supplier  = col1.text_input("Nome - fornecedor")
+        name_product   = col2.text_input("Nome - produto")
         update = st.button("Atualizar fornecedor")
         if update:
-            update_products_supplier(id_supplier, column_table, value)
-            st.toast("Fornecedor atualizado com sucesso!!")
+            db.save_product_supplier(name_supplier, name_product, False)
+            st.toast("Fornecedor atualizado name_productm sucesso!!")
 
     elif operation == "Remover":
-        col1, col2 = st.columns([1, 5])
-        id_supplier = col1.text_input("ID - Fornecedor")
+        col1, col2 = st.columns([2, 2])
+        name_supplier  = col1.text_input("Nome - fornecedor")
+        name_product   = col2.text_input("Nome - produto")
         delete = st.button("Remover fornecedor")
         if delete:
-            delete_products_suppliers(id_supplier)
+            db.save_product_supplier(name_supplier, name_product, True)
             st.toast("Fornecedor removido com sucesso!!")
 
 
     st.divider()
     st.subheader("Tear")
     df_tear = db.get_tear()
-    df = df_tear.set_index("id")
-    st.table(df)
+    df_tear_not_removed = df_tear.drop(df_tear[df_tear["remove"] == True].index)
+    df_tear_not_removed = df_tear_not_removed.drop("remove", axis=1).copy()
+    st.table(df_tear_not_removed)
 
     if operation == "Editar":
-        col9, col10, col11 = st.columns([1, 2, 3])
-        id_tear      = col9.text_input("ID - tear")
-        column_table = col10.selectbox("Coluna - tear", ["nome", "modelo"])
-        value        = col11.text_input("Valor - tear")
+        col1, col2 = st.columns([2, 2])
+        name_tear      = col1.text_input("Nome - tear")
+        model          = col2.text_input("Modelo - tear")
         update = st.button("Atualizar tear")
         if update:
-            update_tear(id_tear, column_table, value)
+            db.save_tear(name_tear, model, False)
             st.toast("Tear atualizado com sucesso!!")
 
     elif operation == "Remover":
-        col1, col2 = st.columns([1, 5])
-        id_tear = col1.text_input("ID - tear")
+        col1, col2 = st.columns([2, 2])
+        name_tear   = col1.text_input("Nome - tear")
+        model       = col2.text_input("Modelo - tear")
         delete = st.button("Remover tear")
         if delete:
-            delete_products_suppliers(id_tear)
+            db.save_tear(name_tear, model, True)
             st.toast("Tear removido com sucesso!!")
 
 
     st.divider()
     st.subheader("Operador")
     df_operator = db.get_operator()
-    df = df_operator.set_index("id")
-    st.table(df)
+    df_operator_not_removed = df_operator.drop(df_operator[df_operator["remove"] == True].index)
+    df_operator_not_removed = df_operator_not_removed.drop("remove", axis=1).copy()
+    st.table(df_operator_not_removed)
 
     if operation == "Editar":
-        col12, col13, col14 = st.columns([1, 2, 3])
-        id_operator  = col12.text_input("ID - operador")
-        column_table = col13.selectbox("Coluna - operador", ["nome", "cargo"])
-        value        = col14.text_input("Valor - operador")
+        col1, col2 = st.columns([2, 2])
+        name_operator  = col1.text_input("Nome - operador")
+        role           = col2.text_input("Cargo - operador")
         update = st.button("Atualizar operador")
         if update:
-            update_operator(id_operator, column_table, value)
+            db.save_operator(name_operator, role, False)
             st.toast("Operador atualizado com sucesso!!")
 
     elif operation == "Remover":
-        col1, col2 = st.columns([1, 5])
-        id_operator = col1.text_input("ID - operador")
+        col1, col2 = st.columns([2, 2])
+        name_operator  = col1.text_input("Nome - operador")
+        role           = col2.text_input("Cargo - operador")
         delete = st.button("Remover operador")
         if delete:
-            delete_operator(id_operator)
+            db.save_operator(name_operator, role, True)
             st.toast("Operador removido com sucesso!!")
