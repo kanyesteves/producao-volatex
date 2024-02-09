@@ -1,8 +1,6 @@
 import pandas as pd
 import streamlit as st
-import sqlite3
-from datetime import datetime
-from lib import Services
+from services import Services
 
 
 st.set_page_config(
@@ -68,7 +66,6 @@ else:
         st.title("Remover")
 
 
-####################3333############################
     st.subheader("Produção")
     df_production = db.get_production()
     df = db.get_products_supplier()
@@ -94,24 +91,23 @@ else:
 
         update = st.button("Atualizar registro")
         if update:
-            db.save_production(num_peca, peso, tear, operator, supplier, product, check, False)
+            result = db.save_production(num_peca, peso, tear, operator, supplier, product, check, False)
             st.toast("Registro atualizado com sucesso!!")
 
     elif operation == "Remover":
-        col1, col2, col3 = st.columns([2, 2, 2])
-        col4, col5, col6 = st.columns([2, 2, 2])
+        col1, col2, col3 = st.columns([0.5, 1, 2])
+        col4, col5, col6, col7 = st.columns([0.5, 1, 1, 2])
         num_peca      = col1.text_input("Numero peça - produção")
-        peso          = col2.number_input("Peso - produção")
-        tear          = col3.text_input("Tear - produção")
-        operator      = col4.text_input("Operador - produção")
-        supplier      = col5.text_input("Fornecedor - produção")
-        product       = col6.text_input("Produto - produção")
-        check         = col6.text_input("Revisão - produção")
+        supplier      = col2.text_input("Fornecedor - produção")
+        product       = col3.text_input("Produto - produção")
+        peso          = col4.number_input("Peso - produção")
+        operator      = col5.text_input("Operador - produção")
+        tear          = col6.text_input("Tear - produção")
+        check         = col7.text_input("Revisão - produção")
         delete = st.button("Remover registro")
         if delete:
-            db.save_production(id_peca)
+            result = db.save_production(num_peca, peso, tear, operator, supplier, product, check, True)
             st.toast("Registro removido com sucesso!!")
-####################3333############################
 
 
     st.divider()

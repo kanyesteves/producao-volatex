@@ -1,9 +1,6 @@
 import pandas as pd
-import sqlite3
-import firebase_admin
 import streamlit as st
-from lib import Services
-from datetime import datetime
+from producaoVolatex.services import Services
 
 st.set_page_config(
     layout="wide",
