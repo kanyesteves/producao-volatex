@@ -3,9 +3,6 @@ import pandas as pd
 from datetime import datetime
 
 class Services:
-    def __init__(self, conn):
-        self.conn = conn
-        self.cursor = conn.cursor()
 
     def get_operator(self):
         try:
@@ -80,7 +77,7 @@ class Services:
         headers = {"Content-Type": "application/json"}
 
         try:
-            response = requests.post("http://192.168.1.5:8000/config/save_tear", data=json.dumps(register_data), headers=headers)
+            response = requests.post("http://192.168.1.5:8000/register/save_tear", data=json.dumps(register_data), headers=headers)
             response.raise_for_status()
             return response
         except requests.exceptions.HTTPError as http_err:
@@ -97,7 +94,7 @@ class Services:
         headers = {"Content-Type": "application/json"}
 
         try:
-            response = requests.post("http://192.168.1.5:8000/config/save_operator", data=json.dumps(register_data), headers=headers)
+            response = requests.post("http://192.168.1.5:8000/register/save_operator", data=json.dumps(register_data), headers=headers)
             response.raise_for_status()
             return response
         except requests.exceptions.HTTPError as http_err:
@@ -114,7 +111,7 @@ class Services:
         headers = {"Content-Type": "application/json"}
 
         try:
-            response = requests.post("http://192.168.1.5:8000/config/save_products_supplier", data=json.dumps(register_data), headers=headers)
+            response = requests.post("http://192.168.1.5:8000/register/save_products_supplier", data=json.dumps(register_data), headers=headers)
             response.raise_for_status()
             return response
         except requests.exceptions.HTTPError as http_err:

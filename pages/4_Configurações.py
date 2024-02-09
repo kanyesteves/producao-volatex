@@ -16,9 +16,7 @@ if st.session_state.get("tipo_usuario") != "admin":
 
 
 # Variáveis Globais
-conn = sqlite3.connect("db/db_producao.db")
-c = conn.cursor()
-db = Services(conn)
+db = Services()
 
 
 ##################### Sidebar #####################
