@@ -44,7 +44,11 @@ if type_filter == "Teares":
 
     st.markdown(f"### Total do mês registrado: {df_filtered_month['peso'].sum():.2f} Kg")
     df_filtered_month["dia"] = df_filtered_month["data"].apply(lambda x:str(x.day))
-    st.bar_chart(df_filtered_month, x="dia", y="peso", color="produto", use_container_width=True)
+    try:
+        st.bar_chart(df_filtered_month, x="dia", y="peso", color="produto", use_container_width=True)
+    except Exception as er:
+        st.warning(f"Nenhum dado registrado no {tear}")
+
 
 if type_filter == "Artigo/Produto":
     df = db.get_products_supplier()
@@ -65,4 +69,7 @@ if type_filter == "Artigo/Produto":
 
     st.markdown(f"### Total do mês registrado: {df_filtered_month['peso'].sum():.2f} Kg")
     df_filtered_month["dia"] = df_filtered_month["data"].apply(lambda x:str(x.day))
-    st.bar_chart(df_filtered_month, x="dia", y="peso", use_container_width=True)
+    try:
+        st.bar_chart(df_filtered_month, x="dia", y="peso", use_container_width=True)
+    except Exception as er:
+        st.warning(f"Erro ao criar gráfico")

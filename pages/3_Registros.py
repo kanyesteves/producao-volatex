@@ -1,6 +1,6 @@
 import pandas as pd
 import streamlit as st
-from producaoVolatex.services import Services
+from services import Services
 
 st.set_page_config(
     layout="wide",
@@ -13,9 +13,7 @@ if st.session_state.get("tipo_usuario") != "admin" and st.session_state.get("tip
     st.stop()
 
 # Variáveis Globais
-conn = sqlite3.connect("db/db_producao.db")
-c = conn.cursor()
-db = Services(conn)
+db = Services()
 
 ##################### Sidebar #####################
 st.sidebar.markdown("Desenvolvido por [Kanydian Esteves](https://www.linkedin.com/in/kanydian-esteves-07b0531a7/)")
@@ -50,12 +48,16 @@ df_production_filtered = df_production_supplier[df_production_supplier["produto"
 df_production_not_removed = df_production_filtered.drop(df_production_filtered[df_production_filtered["remove"] == True].index)
 df_production_not_removed = df_production_not_removed.drop("remove", axis=1).copy()
 
-st.markdown("## Último registro")
-col1, col2 = st.columns(2)
-col1.markdown(f"**Número da peça**: {df_production_not_removed.iloc[-1]['num_peça']}")
-col1.markdown(f"**Tear**:           {df_production_not_removed.iloc[-1]['tear']}")
-col1.markdown(f"**Fornecedor**:     {df_production_not_removed.iloc[-1]['fornecedor']}")
-col1.markdown(f"**Artigo**:         {df_production_not_removed.iloc[-1]['produto']}")
-col2.markdown(f"**Peso**:           {df_production_not_removed.iloc[-1]['peso']}")
-col2.markdown(f"**Operador**:       {df_production_not_removed.iloc[-1]['operador']}")
-col2.markdown(f"**Revisão**:        {df_production_not_removed.iloc[-1]['revisao']}")
+try:
+    st.markdown("## Último registro")
+    col1, col2 = st.columns(2)
+    col1.markdown(f"**Número da peça**: {df_production_not_removed.iloc[-1]['num_peça']}")
+    col1.markdown(f"**Tear**:           {df_production_not_removed.iloc[-1]['tear']}")
+    col1.markdown(f"**Fornecedor**:     {df_production_not_removed.iloc[-1]['fornecedor']}")
+    col1.markdown(f"**Artigo**:         {df_production_not_removed.iloc[-1]['produto']}")
+    col2.markdown(f"**Peso**:           {df_production_not_removed.iloc[-1]['peso']}")
+    col2.markdown(f"**Operador**:       {df_production_not_removed.iloc[-1]['operador']}")
+    col2.markdown(f"**Revisão**:        {df_production_not_removed.iloc[-1]['revisao']}")
+
+except Exception as er:
+    st.warning("Nenhum registro cadastrado nesse artigo !!")

@@ -6,7 +6,7 @@ class Services:
 
     def get_operator(self):
         try:
-            response = requests.get("http://192.168.1.5:8000/register/get_operators/")
+            response = requests.get("http://localhost:8000/register/get_operators/")
             data = response.json()
             data_list = list(data.values())
             df = pd.DataFrame(data_list)
@@ -16,7 +16,7 @@ class Services:
 
     def get_tear(self):
         try:
-            response = requests.get("http://192.168.1.5:8000/register/get_tear/")
+            response = requests.get("http://localhost:8000/register/get_tear/")
             data = response.json()
             data_list = list(data.values())
             df = pd.DataFrame(data_list)
@@ -26,7 +26,7 @@ class Services:
 
     def get_products_supplier(self):
         try:
-            response = requests.get("http://192.168.1.5:8000/register/get_products_suppliers/")
+            response = requests.get("http://localhost:8000/register/get_products_suppliers/")
             data = response.json()
             data_list = list(data.values())
             df = pd.DataFrame(data_list)
@@ -36,7 +36,7 @@ class Services:
 
     def get_production(self):
         try:
-            response = requests.get("http://192.168.1.5:8000/register/get_production/")
+            response = requests.get("http://localhost:8000/register/get_production/")
             data = response.json()
             data_list = list(data.values())
             df = pd.DataFrame(data_list)
@@ -60,7 +60,7 @@ class Services:
         headers = {"Content-Type": "application/json"}
 
         try:
-            response = requests.post("http://192.168.1.5:8000/register/save_production", data=json.dumps(register_data), headers=headers)
+            response = requests.post("http://localhost:8000/register/save_production", data=json.dumps(register_data), headers=headers)
             response.raise_for_status()
             return response
         except requests.exceptions.HTTPError as http_err:
@@ -77,7 +77,7 @@ class Services:
         headers = {"Content-Type": "application/json"}
 
         try:
-            response = requests.post("http://192.168.1.5:8000/register/save_tear", data=json.dumps(register_data), headers=headers)
+            response = requests.post("http://localhost:8000/register/save_tear", data=json.dumps(register_data), headers=headers)
             response.raise_for_status()
             return response
         except requests.exceptions.HTTPError as http_err:
@@ -94,7 +94,7 @@ class Services:
         headers = {"Content-Type": "application/json"}
 
         try:
-            response = requests.post("http://192.168.1.5:8000/register/save_operator", data=json.dumps(register_data), headers=headers)
+            response = requests.post("http://localhost:8000/register/save_operator", data=json.dumps(register_data), headers=headers)
             response.raise_for_status()
             return response
         except requests.exceptions.HTTPError as http_err:
@@ -111,7 +111,7 @@ class Services:
         headers = {"Content-Type": "application/json"}
 
         try:
-            response = requests.post("http://192.168.1.5:8000/register/save_products_supplier", data=json.dumps(register_data), headers=headers)
+            response = requests.post("http://localhost:8000/register/save_products_supplier", data=json.dumps(register_data), headers=headers)
             response.raise_for_status()
             return response
         except requests.exceptions.HTTPError as http_err:
