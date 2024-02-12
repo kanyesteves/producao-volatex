@@ -7,11 +7,6 @@ st.set_page_config(
     page_title="Produção-Volatex"
 )
 
-# Verifica permissão
-if st.session_state.get("tipo_usuario") != "admin" and st.session_state.get("tipo_usuario") != "operador":
-    st.error("Você não tem permissão para acessar esta página.")
-    st.stop()
-
 # Variáveis Globais
 db = Services()
 
