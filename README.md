@@ -16,3 +16,14 @@ Está documentação foi pensada naquele programador que já contém alguns conh
 - [Plotly](https://plotly.com/python/)
 - [Requests](https://requests.readthedocs.io/en/latest/)
 - [SQLite3](https://www.sqlite.org/docs.html)
+
+
+## Docker
+Build iamgem e subir os containers:
+```
+docker compose up -d
+```
+Após iniciado é necessário copiar o JSON esperado do projeto Firebase:
+```
+docker cp <PATH>/db-firestore-volatex-firebase-adminsdk.json web:/app/
+```
