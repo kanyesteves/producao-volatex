@@ -40,8 +40,10 @@ if type_filter == "Artigo/Produto":
 
 
     col1, col2 = st.columns(2)
-    supplier = col1.selectbox("Fornecedor", df["fornecedor"].unique())
-    df_filtered_supplier = df[df["fornecedor"] == supplier]
+    df_production_not_removed = df.drop(df[df["remove"] == True].index)
+    df_production_not_removed = df_production_not_removed.drop("remove", axis=1).copy()
+    supplier = col1.selectbox("Fornecedor", df_production_not_removed["fornecedor"].unique())
+    df_filtered_supplier = df_production_not_removed[df["fornecedor"] == supplier]
     product = col2.selectbox("Artigo", df_filtered_supplier["produto"].unique())
 
     df_filtered = df_production[(df_production["produto"] == product) & (df_production["fornecedor"] == supplier)]

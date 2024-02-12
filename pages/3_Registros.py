@@ -17,14 +17,20 @@ st.sidebar.markdown("Desenvolvido por [Kanydian Esteves](https://www.linkedin.co
 ##################### BODY #####################
 st.title("Registro")
 df_tear = db.get_tear()
-tear = st.selectbox("Tear", df_tear["nome"].unique())
+df_production_not_removed = df_tear.drop(df_tear[df_tear["remove"] == True].index)
+df_production_not_removed = df_production_not_removed.drop("remove", axis=1).copy()
+tear = st.selectbox("Tear", df_production_not_removed["nome"].unique())
 col1, col2 = st.columns(2)
 col3, col4, col5 = st.columns(3)
 
 df_product_supplier = db.get_products_supplier()
-supplier    = col1.selectbox("Fornecedor", df_product_supplier["fornecedor"].unique())
+df_production_not_removed = df_product_supplier.drop(df_product_supplier[df_product_supplier["remove"] == True].index)
+df_production_not_removed = df_production_not_removed.drop("remove", axis=1).copy()
+supplier    = col1.selectbox("Fornecedor", df_production_not_removed["fornecedor"].unique())
 supplier_filtered = df_product_supplier[df_product_supplier["fornecedor"] == supplier]
-product     = col2.selectbox("Artigo", supplier_filtered["produto"].unique())
+df_production_not_removed = supplier_filtered.drop(supplier_filtered[supplier_filtered["remove"] == True].index)
+df_production_not_removed = df_production_not_removed.drop("remove", axis=1).copy()
+product     = col2.selectbox("Artigo", df_production_not_removed["produto"].unique())
 num_peca    = col3.text_input("Número da peça")
 peso        = col4.number_input("Peso/KG")
 df_operator = db.get_operator()
