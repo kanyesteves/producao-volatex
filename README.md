@@ -16,3 +16,6 @@ Está documentação foi pensada naquele programador que já contém alguns conh
 - [Plotly](https://plotly.com/python/)
 - [Requests](https://requests.readthedocs.io/en/latest/)
 - [SQLite3](https://www.sqlite.org/docs.html)
+
+#### Estrutura do projeto:
+![Estrutura](https://github.com/kanyesteves/producao-volatex/blob/master/estrutura-volatex.png)
