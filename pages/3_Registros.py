@@ -34,7 +34,9 @@ product     = col2.selectbox("Artigo", df_production_not_removed["produto"].uniq
 num_peca    = col3.text_input("Número da peça")
 peso        = col4.number_input("Peso/KG")
 df_operator = db.get_operator()
-operator    = col5.selectbox("Operador", df_operator["nome"].unique())
+df_operator_not_removed = df_operator.drop(df_operator[df_operator["remove"] == True].index)
+df_operator_not_removed = df_operator_not_removed.drop("remove", axis=1).copy()
+operator    = col5.selectbox("Operador", df_operator_not_removed["nome"].unique())
 check       = st.text_input("Revisão")
 insert      = st.button("Registrar")
 if insert:
