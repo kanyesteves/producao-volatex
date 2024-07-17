@@ -1,4 +1,5 @@
 import streamlit as st
+import time
 import sqlite3
 
 st.set_page_config(
@@ -30,6 +31,9 @@ if login_button:
     tipo_usuario = verificar_login(username_input, password_input)
     if tipo_usuario:
         st.session_state.tipo_usuario = tipo_usuario
+        st.session_state.login = True
         st.success(f"Login bem-sucedido!!")
+        time.sleep(1)
+        st.switch_page("pages/1_Gráficos.py")
     else:
         st.error("Usuário ou senha incorretos.")
